@@ -6,6 +6,8 @@
 #include <boost/hana/first.hpp>
 #include <boost/hana/pair.hpp>
 #include <boost/hana/second.hpp>
+
+#include <type_traits>
 namespace hana = boost::hana;
 
 
@@ -41,8 +43,9 @@ int main() {
     // make sure the default constructor is not instantiated when the
     // members of the pair are not default-constructible
     {
-        hana::pair<NoDefault, NoDefault> p{NoDefault{1}, NoDefault{2}};
-        (void)p;
+        using Pair = hana::pair<NoDefault, NoDefault>;
+        Pair p{NoDefault{1}, NoDefault{2}}; (void)p;
+        static_assert(!std::is_default_constructible<Pair>{}, "");
     }
 
     // make sure it works when only the default constructor is defined
